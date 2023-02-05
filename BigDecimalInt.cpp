@@ -33,7 +33,11 @@ BigDecimalInt::BigDecimalInt(string decStr){
     }
 }
 
-BigDecimalInt::BigDecimalInt(int x) : BigDecimalInt(to_string(x)) {}
+BigDecimalInt::BigDecimalInt(const int& x) :
+    BigDecimalInt(to_string(x)) {}
+
+BigDecimalInt::BigDecimalInt(const long long& x) :
+        BigDecimalInt(to_string(x)) {}
 
 char BigDecimalInt::sign() const{
     return minusOrPlus;

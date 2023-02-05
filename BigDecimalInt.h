@@ -8,7 +8,8 @@ class BigDecimalInt {
     public:
         // Constructors
         BigDecimalInt() = default;
-        BigDecimalInt(int);
+        BigDecimalInt(const int&);
+        BigDecimalInt(const long long&);
         BigDecimalInt(string);
 
         // Getters
@@ -28,7 +29,7 @@ class BigDecimalInt {
 
 
     private:
-        string digits;
+        string digits = "0";
         char minusOrPlus = '+';
 
         // Helper Functions
