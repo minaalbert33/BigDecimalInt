@@ -18,6 +18,7 @@ BigDecimalInt::BigDecimalInt(string decStr){
     while (decStr[lengthToRemove] == '0'){
         lengthToRemove++;
     }
+    lengthOfTrailingZeros = lengthToRemove - signExist;
     decStr.erase(signExist, lengthToRemove - signExist);
 
     // Seperating the minusOrPlus from the digits
@@ -47,12 +48,12 @@ int BigDecimalInt::size() const{
     return digits.size();
 }
 
-ostream &operator<<(ostream &out, const BigDecimalInt &b){
+ostream &operator<<(ostream &out, const BigDecimalInt &num){
     // print number with '-' sign or without '+' sign
-    if (b.minusOrPlus == '-')
-        out << b.minusOrPlus << b.digits;
+    if (num.minusOrPlus == '-')
+        out << num.minusOrPlus << num.digits;
     else
-        out << b.digits;
+        out << num.digits;
     return out;
 }
 
@@ -222,8 +223,7 @@ string BigDecimalInt::perform_subtraction(const BigDecimalInt &num1, const BigDe
     return gf;
 }
 
-BigDecimalInt BigDecimalInt::operator-(BigDecimalInt &rhs)
-{
+BigDecimalInt BigDecimalInt::operator-(BigDecimalInt &rhs){
     string s = "";
     // e.g. (3 -(-9)) -> 3 + 9
     if (this->isPositive() && rhs.isNegative()){

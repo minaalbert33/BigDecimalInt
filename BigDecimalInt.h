@@ -14,7 +14,7 @@ class BigDecimalInt {
 
         // Getters
         char sign ()const;
-        int size ()const; // return # of digits
+
         bool isNegative()const;
         bool isPositive()const;
 
@@ -31,11 +31,13 @@ class BigDecimalInt {
     private:
         string digits = "0";
         char minusOrPlus = '+';
+        int lengthOfTrailingZeros = 0;
 
         // Helper Functions
         int getDigit(int) const;
         string performAddition(const BigDecimalInt& ,const BigDecimalInt&) const;
         string perform_subtraction(const BigDecimalInt& , const BigDecimalInt& ) const;
+        int size ()const; // return # of digits
         // return 9's complement of the number
         BigDecimalInt ninesComplement(int) const;
 };
