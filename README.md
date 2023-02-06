@@ -60,6 +60,7 @@
 * #### Comparison: `<`, `>`, `==`, `!=`, `<=`,`>=`
 
   ```c++
+  BigDecimalInt num1, num2;
   if ( num1 > num2
       || num1 < num2
       || num1 <= num3
@@ -74,8 +75,9 @@
 * #### I/O stream: `<<`, `>>`
 
   ```c++
-  std::cin >> num1 >> num1;
-  std::cout << num1 << ", " << num1 << '\n';
+  BigDecimalInt num1, num2;
+  cin >> num1 >> num1;
+  cout << num1 << ", " << num1 << '\n';
   ```
 
 [//]: # (### Functions)
