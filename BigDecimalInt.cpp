@@ -18,18 +18,17 @@ BigDecimalInt::BigDecimalInt(string decStr){
     while (decStr[lengthToRemove] == '0'){
         lengthToRemove++;
     }
-    lengthOfTrailingZeros = lengthToRemove - signExist;
     decStr.erase(signExist, lengthToRemove - signExist);
 
     // Seperating the minusOrPlus from the digits
     if (decStr[0] == '-'){
-        minusOrPlus = '-';
+        Sign = '-';
         digits = decStr.substr(1, decStr.size() - 1);
     }else if (decStr[0] == '+'){
-        minusOrPlus = '+';
+        Sign = '+';
         digits = decStr.substr(1, decStr.size() - 1);
     }else{
-        minusOrPlus = '+';
+        Sign = '+';
         digits = decStr;
     }
 }
@@ -41,7 +40,7 @@ BigDecimalInt::BigDecimalInt(const long long& x) :
         BigDecimalInt(to_string(x)) {}
 
 char BigDecimalInt::sign() const{
-    return minusOrPlus;
+    return Sign;
 }
 
 int BigDecimalInt::size() const{
@@ -50,8 +49,8 @@ int BigDecimalInt::size() const{
 
 ostream &operator<<(ostream &out, const BigDecimalInt &num){
     // print number with '-' sign or without '+' sign
-    if (num.minusOrPlus == '-')
-        out << num.minusOrPlus << num.digits;
+    if (num.Sign == '-')
+        out << num.Sign << num.digits;
     else
         out << num.digits;
     return out;
@@ -59,18 +58,18 @@ ostream &operator<<(ostream &out, const BigDecimalInt &num){
 
 bool BigDecimalInt::operator==(const BigDecimalInt &rhs) const{
     // checking if two objects has the same minusOrPlus, then checking the digits
-    if (this->minusOrPlus == rhs.minusOrPlus)
+    if (this->Sign == rhs.Sign)
         return (this->digits == rhs.digits);
     else
         return false;
 }
 
 bool BigDecimalInt::isNegative() const{
-    return (minusOrPlus == '-');
+    return (Sign == '-');
 }
 
 bool BigDecimalInt::isPositive() const{
-    return (minusOrPlus == '+');
+    return (Sign == '+');
 }
 
 int BigDecimalInt::getDigit(int index) const{
