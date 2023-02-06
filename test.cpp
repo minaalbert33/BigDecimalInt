@@ -3,8 +3,6 @@
 using namespace std;
 
 int main (){
-    BigDecimalInt a("3"), b("-000000011");
-    a-=00;
-    cout << "a: " << a << ' ' << "b: " << b << endl;
-//    cout << ++a;
+    BigDecimalInt a("0000000000000004"), b("-4");
+    cout << (a  + BigDecimalInt(0));
 }

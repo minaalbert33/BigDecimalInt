@@ -1,7 +1,9 @@
 #ifndef CLIONPROJECTS_BIGDECIMALINT_H
 #define CLIONPROJECTS_BIGDECIMALINT_H
 
-#include <bits/stdc++.h>
+#include <iostream>
+#include <string>
+#include <regex>
 using namespace std;
 
 class BigDecimalInt {
@@ -13,7 +15,6 @@ class BigDecimalInt {
         BigDecimalInt(string);
 
         // Getters
-        char sign ()const;
         int size ()const; // return # of digits
         bool isNegative()const;
         bool isPositive()const;
@@ -24,60 +25,51 @@ class BigDecimalInt {
         BigDecimalInt& operator=(const long long&);
         BigDecimalInt& operator=(const string&);
 
-        // Increment and decrement operators
+        // Increment & Decrement Operators
         BigDecimalInt& operator++();       // pre-increment
         BigDecimalInt& operator--();       // pre-decrement
-        BigDecimalInt operator++(int);     // post-increment
-        BigDecimalInt operator--(int);     // post-decrement
+        BigDecimalInt operator++(int)const;     // post-increment
+        BigDecimalInt operator--(int)const;     // post-decrement
 
-        // Binary arithmetic operators:
+        // Binary arithmetic Operators:
         BigDecimalInt operator+(const BigDecimalInt& )const ;
+        BigDecimalInt operator+(const BigDecimalInt&& )const ;
         BigDecimalInt operator-(const BigDecimalInt&) const;
+        BigDecimalInt operator-(const BigDecimalInt&& )const;
 //        BigDecimalInt operator*(const BigDecimalInt&) const;
 //        BigDecimalInt operator/(const BigDecimalInt&) const;
 //        BigDecimalInt operator%(const BigDecimalInt&) const;
-        BigDecimalInt operator+(const long long&) const;
-        BigDecimalInt operator-(const long long&) const;
-//        BigDecimalInt operator*(const long long&) const;
-//        BigDecimalInt operator/(const long long&) const;
-//        BigDecimalInt operator%(const long long&) const;
-        BigDecimalInt operator+(const string&) const;
-        BigDecimalInt operator-(const string&) const;
-//        BigDecimalInt operator*(const string&) const;
-//        BigDecimalInt operator/(const string&) const;
-//        BigDecimalInt operator%(const string&) const;
 
-        // Arithmetic-assignment operators
+
+        // Arithmetic-assignment Operators
         BigDecimalInt& operator+=(const BigDecimalInt&);
         BigDecimalInt& operator-=(const BigDecimalInt&);
 //        BigDecimalInt& operator*=(const BigDecimalInt&);
 //        BigDecimalInt& operator/=(const BigDecimalInt&);
 //        BigDecimalInt& operator%=(const BigDecimalInt&);
-        BigDecimalInt& operator+=(const long long&);
-        BigDecimalInt& operator-=(const long long&);
-//        BigDecimalInt& operator*=(const long long&);
-//        BigDecimalInt& operator/=(const long long&);
-//        BigDecimalInt& operator%=(const long long&);
-        BigDecimalInt& operator+=(const string&);
-        BigDecimalInt& operator-=(const string&);
-//        BigDecimalInt& operator*=(const std::string&);
-//        BigDecimalInt& operator/=(const std::string&);
-//        BigDecimalInt& operator%=(const std::string&);
 
-        // I/O stream operators
+
+        // Comparison operators
+        bool operator>(const BigDecimalInt& )const;
+        bool operator>=(const BigDecimalInt& )const;
+        bool operator<(const BigDecimalInt& )const;
+        bool operator<=(const BigDecimalInt& )const;
+        bool operator==(const BigDecimalInt& ) const;
+        bool operator!=(const BigDecimalInt& ) const;
+
+
+        // Conversion functions:
+//        string to_string() const;
+//        int to_int() const;
+//        long long to_long_long() const;
+
+//        **Note**: If the `BigDecimalInt` is beyond the range of the target type, an
+//        [out_of_range exception][out_of_range-exception] is thrown.
+
+
+        // I/O stream Operators
         friend istream& operator>>(istream&, BigDecimalInt&);
         friend ostream& operator<<(ostream&, const BigDecimalInt&);
-
-
-        // Overloaded operators
-        friend ostream& operator<<(ostream&,const BigDecimalInt&);
-        bool operator==(const BigDecimalInt& ) const;
-        bool operator>(const BigDecimalInt& )const;
-        bool operator<(const BigDecimalInt& )const;
-
-        BigDecimalInt operator+(const BigDecimalInt&& )const ;
-        BigDecimalInt operator-(const BigDecimalInt&& )const ;
-
 
     private:
         string digits = "0";
@@ -86,7 +78,7 @@ class BigDecimalInt {
         // Helper Functions
         int getDigit(int) const;
         string performAddition(const BigDecimalInt& ,const BigDecimalInt&) const;
-        string perform_subtraction(const BigDecimalInt& , const BigDecimalInt& ) const;
+        string performSubtraction(const BigDecimalInt& , const BigDecimalInt& ) const;
         BigDecimalInt ninesComplement(int) const; // return 9's complement of the number
 };
 

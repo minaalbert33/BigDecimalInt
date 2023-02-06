@@ -39,21 +39,9 @@ BigDecimalInt::BigDecimalInt(const int& x) :
 BigDecimalInt::BigDecimalInt(const long long& x) :
         BigDecimalInt(to_string(x)) {}
 
-char BigDecimalInt::sign() const{
-    return Sign;
-}
 
 int BigDecimalInt::size() const{
     return digits.size();
-}
-
-
-bool BigDecimalInt::operator==(const BigDecimalInt &rhs) const{
-    // checking if two objects has the same minusOrPlus, then checking the digits
-    if (this->Sign == rhs.Sign)
-        return (this->digits == rhs.digits);
-    else
-        return false;
 }
 
 bool BigDecimalInt::isNegative() const{
@@ -70,52 +58,6 @@ int BigDecimalInt::getDigit(int index) const{
 
     // return 0 if index not in the size of digits
     return 0;
-}
-
-bool BigDecimalInt::operator<(const BigDecimalInt &rhs) const{
-    if (this->isNegative() != rhs.isNegative())
-        return (this->isNegative());
-
-    if (this->size() != rhs.size()){
-        if (this->size() > rhs.size() && this->isPositive())
-            return false;
-        else if (this->size() < rhs.size() && this->isNegative())
-            return false;
-        else
-            return true;
-    }
-
-    for (int i = 0; i < this->size(); i++){
-        if (this->digits[i] > rhs.digits[i])
-            return this->isNegative();
-        else if (this->digits[i] < rhs.digits[i])
-            return this->isPositive();
-    }
-    return false;
-}
-
-bool BigDecimalInt::operator>(const BigDecimalInt &rhs) const{
-    // Signs aren't the same, *this > rhs only if *this is positive
-    if (this->isNegative() != rhs.isNegative())
-        return (this->isPositive());
-
-    // Digits aren't the same, then check # of digits and minusOrPlus
-
-    // Case 1: e.g. (-13, -123)
-    bool case1 = (this->size() < rhs.size()) && this->isNegative();
-    // Case 2: e.g. (555, 5)
-    bool case2 = (this->size() > rhs.size()) && this->isPositive();
-    if (this->size() != rhs.size())
-        return (case1 || case2);
-
-    // Signs are the same, # of digits is same
-    for (int i = 0; i < rhs.size(); i++){
-        if (this->digits[i] < rhs.digits[i])
-            return this->isNegative();
-        if (this->digits[i] > rhs.digits[i])
-            return this->isPositive();
-    }
-    return false; // *this == rhs
 }
 
 BigDecimalInt BigDecimalInt::ninesComplement(int len) const{
@@ -159,8 +101,8 @@ string BigDecimalInt::performAddition(const BigDecimalInt &num1, const BigDecima
     return result;
 }
 
-string BigDecimalInt::perform_subtraction(const BigDecimalInt &num1, const BigDecimalInt &num2) const{
-    string result = "", gf = "";
+string BigDecimalInt::performSubtraction(const BigDecimalInt & num1, const BigDecimalInt & num2) const{
+    string result, gf;
 
     // Getting the bigger length between num1 and num2
     int lengthToLoop = (num1.size() > num2.size()) ? num1.size() : num2.size();
@@ -190,7 +132,8 @@ BigDecimalInt &BigDecimalInt::operator=(const string & rhs) {
     return *this;
 }
 
-// Increment and decrement operators
+
+// Increment & Decrement Operators
 BigDecimalInt &BigDecimalInt::operator++() {
     *this = (*this) + BigDecimalInt(1);
     return *this;
@@ -201,17 +144,18 @@ BigDecimalInt &BigDecimalInt::operator--() {
     return *this;
 }
 
-BigDecimalInt BigDecimalInt::operator++(int) {
+BigDecimalInt BigDecimalInt::operator++(int) const{
     BigDecimalInt temp = *this + BigDecimalInt(1);
     return temp;
 }
 
-BigDecimalInt BigDecimalInt::operator--(int) {
+BigDecimalInt BigDecimalInt::operator--(int) const{
     BigDecimalInt temp = *this - BigDecimalInt(1);
     return temp;
 }
 
-// Binary arithmetic operators
+
+// Binary arithmetic Operators
 BigDecimalInt BigDecimalInt::operator+(const BigDecimalInt &rhs)const{
     string s;
     BigDecimalInt temp, zero("0");
@@ -228,12 +172,12 @@ BigDecimalInt BigDecimalInt::operator+(const BigDecimalInt &rhs)const{
         temp = zero - *this;
         if (rhs < temp)
         {
-            s = perform_subtraction(temp, rhs);
+            s = performSubtraction(temp, rhs);
             s.insert(0, 1, '-');
         }
         else if (rhs > temp || temp == rhs)
         {
-            s = perform_subtraction(rhs, temp);
+            s = performSubtraction(rhs, temp);
         }
     }
         // e.g. (3 + (-7)) -> (3 - 7)
@@ -241,9 +185,9 @@ BigDecimalInt BigDecimalInt::operator+(const BigDecimalInt &rhs)const{
 
         temp = zero - rhs;
         if (*this > temp || *this == temp){
-            s = perform_subtraction(*this, temp);
+            s = performSubtraction(*this, temp);
         }else if (*this < temp){
-            s = perform_subtraction(temp, *this);
+            s = performSubtraction(temp, *this);
             s.insert(0, 1, '-');
         }
     }
@@ -263,21 +207,21 @@ BigDecimalInt BigDecimalInt::operator-(const BigDecimalInt &rhs)const{
     }
         // e.g. (9 - 3)
     else if (this->isPositive() && rhs.isPositive() && *this > rhs || *this == rhs){
-        s = perform_subtraction(*this, rhs);
+        s = performSubtraction(*this, rhs);
     }
         // e.g. 15 - 18 --> -(18 - 15)
     else if (this->isPositive() && rhs.isPositive() && *this < rhs){
-        s = perform_subtraction(rhs, *this);
+        s = performSubtraction(rhs, *this);
         s.insert(0, 1, '-');
     }
         // e.g. -19 -(-3) -> -(19 - 3)
     else if (this->isNegative() && rhs.isNegative() && *this < rhs){
-        s = perform_subtraction(*this, rhs);
+        s = performSubtraction(*this, rhs);
         s.insert(0, 1, '-');
     }
         // e.g. -2 -(-19) -> (-2 + 19) -> (19 - 2)
     else if (this->isNegative() && rhs.isNegative() && *this > rhs || *this == rhs){
-        s = perform_subtraction(rhs, *this);
+        s = performSubtraction(rhs, *this);
     }
 
     return BigDecimalInt(s);
@@ -291,23 +235,8 @@ BigDecimalInt BigDecimalInt::operator-(const BigDecimalInt &&rhs)const{
     return (*this - rhs);
 }
 
-BigDecimalInt BigDecimalInt::operator+(const long long int & rhs) const {
-    return (*this + BigDecimalInt(rhs));
-}
 
-BigDecimalInt BigDecimalInt::operator-(const long long int & rhs) const {
-    return (*this - BigDecimalInt(rhs));
-}
-
-BigDecimalInt BigDecimalInt::operator+(const string & rhs) const {
-    return (*this + BigDecimalInt(rhs));
-}
-
-BigDecimalInt BigDecimalInt::operator-(const string & rhs) const {
-    return (*this - BigDecimalInt(rhs));
-}
-
-// Arithmetic-assignment operators
+// Arithmetic-assignment Operators
 BigDecimalInt &BigDecimalInt::operator+=(const BigDecimalInt & rhs) {
     *this = *this + rhs;
     return *this;
@@ -318,27 +247,58 @@ BigDecimalInt &BigDecimalInt::operator-=(const BigDecimalInt &rhs) {
     return *this;
 }
 
-BigDecimalInt &BigDecimalInt::operator+=(const long long int &rhs) {
-    *this = *this + rhs;
-    return *this;
+
+// Comparison Operators
+bool BigDecimalInt::operator<(const BigDecimalInt &rhs) const{
+    return (*this != rhs) && (rhs > *this);
 }
 
-BigDecimalInt &BigDecimalInt::operator-=(const long long int &rhs) {
-    *this = *this - rhs;
-    return *this;
+bool BigDecimalInt::operator<=(const BigDecimalInt &rhs) const{
+    return (*this == rhs) || (rhs < *this);
 }
 
-BigDecimalInt &BigDecimalInt::operator+=(const string &rhs) {
-    *this = *this + rhs;
-    return *this;
+bool BigDecimalInt::operator>(const BigDecimalInt &rhs) const{
+    // Signs aren't the same, *this > rhs only if *this is positive
+    if (this->isNegative() != rhs.isNegative())
+        return (this->isPositive());
+
+    // Digits aren't the same, then check # of digits and minusOrPlus
+
+    // Case 1: e.g. (-13, -123)
+    bool case1 = (this->size() < rhs.size()) && this->isNegative();
+    // Case 2: e.g. (555, 5)
+    bool case2 = (this->size() > rhs.size()) && this->isPositive();
+    if (this->size() != rhs.size())
+        return (case1 || case2);
+
+    // Signs are the same, # of digits is same
+    for (int i = 0; i < rhs.size(); i++){
+        if (this->digits[i] < rhs.digits[i])
+            return this->isNegative();
+        if (this->digits[i] > rhs.digits[i])
+            return this->isPositive();
+    }
+    return false; // *this == rhs
 }
 
-BigDecimalInt &BigDecimalInt::operator-=(const string &rhs) {
-    *this = *this - rhs;
-    return *this;
+bool BigDecimalInt::operator>=(const BigDecimalInt &rhs) const{
+   return (*this == rhs) || (*this > rhs);
 }
 
-// I/O stream operators:
+bool BigDecimalInt::operator==(const BigDecimalInt &rhs) const{
+    // checking if two objects has the same minusOrPlus, then checking the digits
+    if (this->Sign == rhs.Sign)
+        return (this->digits == rhs.digits);
+    else
+        return false;
+}
+
+bool BigDecimalInt::operator!=(const BigDecimalInt &rhs) const{
+   return !(*this == rhs);
+}
+
+
+// I/O stream Operators:
 ostream& operator<<(ostream &out, const BigDecimalInt &num){
     // print number with '-' sign or without '+' sign
     if (num.Sign == '-')
