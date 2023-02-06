@@ -19,6 +19,17 @@ class BigDecimalInt {
         bool isPositive()const;
 
 
+        //Assignment Operators
+        BigDecimalInt& operator=(const BigDecimalInt&);
+        BigDecimalInt& operator=(const long long&);
+        BigDecimalInt& operator=(const string&);
+
+        // Increment and decrement operators
+        BigDecimalInt& operator++();       // pre-increment
+        BigDecimalInt& operator--();       // pre-decrement
+        BigDecimalInt operator++(int);     // post-increment
+        BigDecimalInt operator--(int);     // post-decrement
+
         // Overloaded operators
         friend ostream& operator<<(ostream&,const BigDecimalInt&);
         bool operator==(const BigDecimalInt& rhs) const;
@@ -26,6 +37,8 @@ class BigDecimalInt {
         bool operator<(const BigDecimalInt& rhs)const;
         BigDecimalInt operator+(BigDecimalInt& rhs);
         BigDecimalInt operator-(BigDecimalInt& rhs);
+        BigDecimalInt operator+(BigDecimalInt&& rhs);
+        BigDecimalInt operator-(BigDecimalInt&& rhs);
 
 
     private:

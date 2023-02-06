@@ -126,43 +126,6 @@ bool BigDecimalInt::operator>(const BigDecimalInt &rhs) const{
     return false; // *this == rhs
 }
 
-BigDecimalInt BigDecimalInt::operator+(BigDecimalInt &rhs){
-    string s;
-    BigDecimalInt temp, zero("0");
-    if (this->isPositive() && rhs.isPositive())
-        s = performAddition(*this, rhs);
-
-    // both numbers are negative e.g. (-3 + (-7)) -> -(3 + 7)
-    else if (this->isNegative() && rhs.isNegative()){
-        s = performAddition(*this, rhs);
-        s.insert(0, 1, '-');
-    }
-    // e.g. (-3 + 7) -> (7 - 3)
-    else if (this->isNegative() && rhs.isPositive()){
-        temp = zero - *this;
-        if (rhs < temp)
-        {
-            s = perform_subtraction(temp, rhs);
-            s.insert(0, 1, '-');
-        }
-        else if (rhs > temp || temp == rhs)
-        {
-            s = perform_subtraction(rhs, temp);
-        }
-    }
-    // e.g. (3 + (-7)) -> (3 - 7)
-    else if (this->isPositive() && rhs.isNegative()){
-
-        temp = zero - rhs;
-        if (*this > temp || *this == temp){
-            s = perform_subtraction(*this, temp);
-        }else if (*this < temp){
-            s = perform_subtraction(temp, *this);
-            s.insert(0, 1, '-');
-        }
-    }
-    return BigDecimalInt(s);
-}
 
 BigDecimalInt BigDecimalInt::ninesComplement(int len) const{
     string result = "";
@@ -222,6 +185,44 @@ string BigDecimalInt::perform_subtraction(const BigDecimalInt &num1, const BigDe
     return gf;
 }
 
+BigDecimalInt BigDecimalInt::operator+(BigDecimalInt &rhs){
+    string s;
+    BigDecimalInt temp, zero("0");
+    if (this->isPositive() && rhs.isPositive())
+        s = performAddition(*this, rhs);
+
+        // both numbers are negative e.g. (-3 + (-7)) -> -(3 + 7)
+    else if (this->isNegative() && rhs.isNegative()){
+        s = performAddition(*this, rhs);
+        s.insert(0, 1, '-');
+    }
+        // e.g. (-3 + 7) -> (7 - 3)
+    else if (this->isNegative() && rhs.isPositive()){
+        temp = zero - *this;
+        if (rhs < temp)
+        {
+            s = perform_subtraction(temp, rhs);
+            s.insert(0, 1, '-');
+        }
+        else if (rhs > temp || temp == rhs)
+        {
+            s = perform_subtraction(rhs, temp);
+        }
+    }
+        // e.g. (3 + (-7)) -> (3 - 7)
+    else if (this->isPositive() && rhs.isNegative()){
+
+        temp = zero - rhs;
+        if (*this > temp || *this == temp){
+            s = perform_subtraction(*this, temp);
+        }else if (*this < temp){
+            s = perform_subtraction(temp, *this);
+            s.insert(0, 1, '-');
+        }
+    }
+    return BigDecimalInt(s);
+}
+
 BigDecimalInt BigDecimalInt::operator-(BigDecimalInt &rhs){
     string s = "";
     // e.g. (3 -(-9)) -> 3 + 9
@@ -253,4 +254,50 @@ BigDecimalInt BigDecimalInt::operator-(BigDecimalInt &rhs){
     }
     
     return BigDecimalInt(s);
+}
+
+BigDecimalInt BigDecimalInt::operator+(BigDecimalInt &&rhs){
+   return (*this + rhs);
+}
+
+BigDecimalInt BigDecimalInt::operator-(BigDecimalInt &&rhs){
+    return (*this - rhs);
+}
+
+//Assignment Operators
+BigDecimalInt &BigDecimalInt::operator=(const BigDecimalInt & rhs) {
+    digits = rhs.digits;
+    Sign = rhs.Sign;
+    return *this;
+}
+
+BigDecimalInt &BigDecimalInt::operator=(const long long & rhs) {
+    *this = BigDecimalInt(rhs);
+    return *this;
+}
+
+BigDecimalInt &BigDecimalInt::operator=(const string & rhs) {
+    *this = BigDecimalInt(rhs);
+    return *this;
+}
+
+// Increment and decrement operators
+BigDecimalInt &BigDecimalInt::operator++() {
+    *this = (*this) + BigDecimalInt(1);
+    return *this;
+}
+
+BigDecimalInt &BigDecimalInt::operator--() {
+    *this = (*this) - BigDecimalInt(1);
+    return *this;
+}
+
+BigDecimalInt BigDecimalInt::operator++(int) {
+    BigDecimalInt temp = *this + BigDecimalInt(1);
+    return temp;
+}
+
+BigDecimalInt BigDecimalInt::operator--(int) {
+    BigDecimalInt temp = *this - BigDecimalInt(1);
+    return temp;
 }
