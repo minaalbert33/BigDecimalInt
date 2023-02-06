@@ -4,6 +4,7 @@ using namespace std;
 
 int main (){
     BigDecimalInt a("3"), b("-000000011");
-//    cout << a + b << endl;
-    cout << ++a;
+    a-=00;
+    cout << "a: " << a << ' ' << "b: " << b << endl;
+//    cout << ++a;
 }

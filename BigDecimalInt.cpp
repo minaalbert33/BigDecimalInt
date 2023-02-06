@@ -47,14 +47,6 @@ int BigDecimalInt::size() const{
     return digits.size();
 }
 
-ostream &operator<<(ostream &out, const BigDecimalInt &num){
-    // print number with '-' sign or without '+' sign
-    if (num.Sign == '-')
-        out << num.Sign << num.digits;
-    else
-        out << num.digits;
-    return out;
-}
 
 bool BigDecimalInt::operator==(const BigDecimalInt &rhs) const{
     // checking if two objects has the same minusOrPlus, then checking the digits
@@ -126,7 +118,6 @@ bool BigDecimalInt::operator>(const BigDecimalInt &rhs) const{
     return false; // *this == rhs
 }
 
-
 BigDecimalInt BigDecimalInt::ninesComplement(int len) const{
     string result = "";
     int sizeDifference = len - this->size();
@@ -185,7 +176,43 @@ string BigDecimalInt::perform_subtraction(const BigDecimalInt &num1, const BigDe
     return gf;
 }
 
-BigDecimalInt BigDecimalInt::operator+(BigDecimalInt &rhs){
+
+//Assignment Operators
+BigDecimalInt &BigDecimalInt::operator=(const BigDecimalInt & rhs) = default;
+
+BigDecimalInt &BigDecimalInt::operator=(const long long & rhs) {
+    *this = BigDecimalInt(rhs);
+    return *this;
+}
+
+BigDecimalInt &BigDecimalInt::operator=(const string & rhs) {
+    *this = BigDecimalInt(rhs);
+    return *this;
+}
+
+// Increment and decrement operators
+BigDecimalInt &BigDecimalInt::operator++() {
+    *this = (*this) + BigDecimalInt(1);
+    return *this;
+}
+
+BigDecimalInt &BigDecimalInt::operator--() {
+    *this = (*this) - BigDecimalInt(1);
+    return *this;
+}
+
+BigDecimalInt BigDecimalInt::operator++(int) {
+    BigDecimalInt temp = *this + BigDecimalInt(1);
+    return temp;
+}
+
+BigDecimalInt BigDecimalInt::operator--(int) {
+    BigDecimalInt temp = *this - BigDecimalInt(1);
+    return temp;
+}
+
+// Binary arithmetic operators
+BigDecimalInt BigDecimalInt::operator+(const BigDecimalInt &rhs)const{
     string s;
     BigDecimalInt temp, zero("0");
     if (this->isPositive() && rhs.isPositive())
@@ -223,81 +250,108 @@ BigDecimalInt BigDecimalInt::operator+(BigDecimalInt &rhs){
     return BigDecimalInt(s);
 }
 
-BigDecimalInt BigDecimalInt::operator-(BigDecimalInt &rhs){
+BigDecimalInt BigDecimalInt::operator-(const BigDecimalInt &rhs)const{
     string s = "";
     // e.g. (3 -(-9)) -> 3 + 9
     if (this->isPositive() && rhs.isNegative()){
         s = performAddition(*this, rhs);
     }
-    //  e.g. (-3 - (+9)) --> -(3 + 9)
+        //  e.g. (-3 - (+9)) --> -(3 + 9)
     else if (this->isNegative() && rhs.isPositive()){
         s = performAddition(*this, rhs);
         s.insert(0, 1, '-');
     }
-    // e.g. (9 - 3)
+        // e.g. (9 - 3)
     else if (this->isPositive() && rhs.isPositive() && *this > rhs || *this == rhs){
         s = perform_subtraction(*this, rhs);
     }
-    // e.g. 15 - 18 --> -(18 - 15)
+        // e.g. 15 - 18 --> -(18 - 15)
     else if (this->isPositive() && rhs.isPositive() && *this < rhs){
         s = perform_subtraction(rhs, *this);
         s.insert(0, 1, '-');
     }
-    // e.g. -19 -(-3) -> -(19 - 3)
+        // e.g. -19 -(-3) -> -(19 - 3)
     else if (this->isNegative() && rhs.isNegative() && *this < rhs){
         s = perform_subtraction(*this, rhs);
         s.insert(0, 1, '-');
     }
-    // e.g. -2 -(-19) -> (-2 + 19) -> (19 - 2)
+        // e.g. -2 -(-19) -> (-2 + 19) -> (19 - 2)
     else if (this->isNegative() && rhs.isNegative() && *this > rhs || *this == rhs){
         s = perform_subtraction(rhs, *this);
     }
-    
+
     return BigDecimalInt(s);
 }
 
-BigDecimalInt BigDecimalInt::operator+(BigDecimalInt &&rhs){
-   return (*this + rhs);
+BigDecimalInt BigDecimalInt::operator+(const BigDecimalInt &&rhs)const{
+    return (*this + rhs);
 }
 
-BigDecimalInt BigDecimalInt::operator-(BigDecimalInt &&rhs){
+BigDecimalInt BigDecimalInt::operator-(const BigDecimalInt &&rhs)const{
     return (*this - rhs);
 }
 
-//Assignment Operators
-BigDecimalInt &BigDecimalInt::operator=(const BigDecimalInt & rhs) {
-    digits = rhs.digits;
-    Sign = rhs.Sign;
+BigDecimalInt BigDecimalInt::operator+(const long long int & rhs) const {
+    return (*this + BigDecimalInt(rhs));
+}
+
+BigDecimalInt BigDecimalInt::operator-(const long long int & rhs) const {
+    return (*this - BigDecimalInt(rhs));
+}
+
+BigDecimalInt BigDecimalInt::operator+(const string & rhs) const {
+    return (*this + BigDecimalInt(rhs));
+}
+
+BigDecimalInt BigDecimalInt::operator-(const string & rhs) const {
+    return (*this - BigDecimalInt(rhs));
+}
+
+// Arithmetic-assignment operators
+BigDecimalInt &BigDecimalInt::operator+=(const BigDecimalInt & rhs) {
+    *this = *this + rhs;
     return *this;
 }
 
-BigDecimalInt &BigDecimalInt::operator=(const long long & rhs) {
-    *this = BigDecimalInt(rhs);
+BigDecimalInt &BigDecimalInt::operator-=(const BigDecimalInt &rhs) {
+    *this = *this - rhs;
     return *this;
 }
 
-BigDecimalInt &BigDecimalInt::operator=(const string & rhs) {
-    *this = BigDecimalInt(rhs);
+BigDecimalInt &BigDecimalInt::operator+=(const long long int &rhs) {
+    *this = *this + rhs;
     return *this;
 }
 
-// Increment and decrement operators
-BigDecimalInt &BigDecimalInt::operator++() {
-    *this = (*this) + BigDecimalInt(1);
+BigDecimalInt &BigDecimalInt::operator-=(const long long int &rhs) {
+    *this = *this - rhs;
     return *this;
 }
 
-BigDecimalInt &BigDecimalInt::operator--() {
-    *this = (*this) - BigDecimalInt(1);
+BigDecimalInt &BigDecimalInt::operator+=(const string &rhs) {
+    *this = *this + rhs;
     return *this;
 }
 
-BigDecimalInt BigDecimalInt::operator++(int) {
-    BigDecimalInt temp = *this + BigDecimalInt(1);
-    return temp;
+BigDecimalInt &BigDecimalInt::operator-=(const string &rhs) {
+    *this = *this - rhs;
+    return *this;
 }
 
-BigDecimalInt BigDecimalInt::operator--(int) {
-    BigDecimalInt temp = *this - BigDecimalInt(1);
-    return temp;
+// I/O stream operators:
+ostream& operator<<(ostream &out, const BigDecimalInt &num){
+    // print number with '-' sign or without '+' sign
+    if (num.Sign == '-')
+        out << num.Sign << num.digits;
+    else
+        out << num.digits;
+    return out;
 }
+
+istream& operator>>(istream& in, BigDecimalInt& rhs){
+    string num;
+    in >> num;
+    rhs = BigDecimalInt(num);
+    return in;
+}
+
