@@ -83,7 +83,7 @@
 [//]: # (### Functions)
 
 [//]: # ()
-[//]: # (* #### Conversion: `to_string`, `to_int`, `to_long`, `to_long_long`)
+[//]: # (* #### Conversion: `toString`, `toInt`, `to_long`, `toLongLong`)
 
 [//]: # ()
 [//]: # (  Convert a `BigInt` to either a `string`, `int`, `long`, or `long long`.)
@@ -97,15 +97,15 @@
 [//]: # ()
 [//]: # (  ```c++)
 
-[//]: # (  some_str = big1.to_string&#40;&#41;;)
+[//]: # (  some_str = big1.toString&#40;&#41;;)
 
 [//]: # ()
-[//]: # (  some_int = big1.to_int&#40;&#41;;)
+[//]: # (  some_int = big1.toInt&#40;&#41;;)
 
 [//]: # ()
 [//]: # (  some_long = big1.to_long&#40;&#41;;)
 
 [//]: # ()
-[//]: # (  some_long_long = big1.to_long_long&#40;&#41;;)
+[//]: # (  some_long_long = big1.toLongLong&#40;&#41;;)
 
 [//]: # (  ```)

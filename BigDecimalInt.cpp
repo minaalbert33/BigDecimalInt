@@ -235,6 +235,41 @@ BigDecimalInt BigDecimalInt::operator-(const BigDecimalInt &&rhs)const{
     return (*this - rhs);
 }
 
+BigDecimalInt BigDecimalInt::operator*(const BigDecimalInt& rhs) const{
+    int resLength = size() + rhs.size();
+    vector<int> res(resLength, 0);
+    for(int i = size() - 1; i >= 0; i--){
+        int carry = 0 ;
+        for(int j = rhs.size() - 1; j >= 0; j--){
+            BigDecimalInt product = this->getDigit(i) * rhs.getDigit(j);
+            res[i + j] += carry + product.getDigit(0);
+
+            if(res[i + j] >= 10){
+                carry = 1;
+                res[i + j] -= 10;
+            }else{
+                carry = 0;
+            }
+
+            if(product.size() > 1)
+                carry += product.getDigit(1);
+        }
+
+        if(carry){
+            res[i + rhs.size()] = carry;
+        }
+
+    }
+//    string temp = "";
+//    for(auto ii: res){
+//        temp += ii + '0';
+//    }
+    for(auto ii: res){
+        cout << ii;
+    }
+    cout << endl;
+//    return BigDecimalInt(temp);
+}
 
 // Arithmetic-assignment Operators
 BigDecimalInt &BigDecimalInt::operator+=(const BigDecimalInt & rhs) {
@@ -296,6 +331,27 @@ bool BigDecimalInt::operator==(const BigDecimalInt &rhs) const{
 bool BigDecimalInt::operator!=(const BigDecimalInt &rhs) const{
    return !(*this == rhs);
 }
+
+// Conversion functions:
+string BigDecimalInt::toString() const {
+    return digits;
+}
+
+int BigDecimalInt::toInt() const {
+    if(*this > BigDecimalInt(INT_MAX))
+        throw out_of_range("This Number is out of range of int");
+
+    return stoi(digits);
+}
+
+long long BigDecimalInt::toLongLong() const {
+    if(*this > BigDecimalInt(LLONG_MAX))
+        throw out_of_range("This Number is out of range of int");
+
+    return stoll(digits);
+}
+
+
 
 
 // I/O stream Operators:

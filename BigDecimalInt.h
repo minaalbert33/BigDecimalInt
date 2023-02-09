@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <regex>
+#include <cstring>
 using namespace std;
 
 class BigDecimalInt {
@@ -36,7 +37,7 @@ class BigDecimalInt {
         BigDecimalInt operator+(const BigDecimalInt&& )const ;
         BigDecimalInt operator-(const BigDecimalInt&) const;
         BigDecimalInt operator-(const BigDecimalInt&& )const;
-//        BigDecimalInt operator*(const BigDecimalInt&) const;
+        BigDecimalInt operator*(const BigDecimalInt&) const;
 //        BigDecimalInt operator/(const BigDecimalInt&) const;
 //        BigDecimalInt operator%(const BigDecimalInt&) const;
 
@@ -58,20 +59,17 @@ class BigDecimalInt {
         bool operator!=(const BigDecimalInt& ) const;
 
 
-        // Conversion functions:
-//        string to_string() const;
-//        int to_int() const;
-//        long long to_long_long() const;
-
-//        **Note**: If the `BigDecimalInt` is beyond the range of the target type, an
-//        [out_of_range exception][out_of_range-exception] is thrown.
-
-
         // I/O stream Operators
         friend istream& operator>>(istream&, BigDecimalInt&);
         friend ostream& operator<<(ostream&, const BigDecimalInt&);
 
-    private:
+        // Conversion functions
+        string toString() const;
+        int toInt() const;
+        long long toLongLong() const;
+
+
+private:
         string digits = "0";
         char Sign = '+';
 
